@@ -2,7 +2,7 @@ package com.santhosh.projects.lovable_clone.service;
 
 import com.santhosh.projects.lovable_clone.dto.member.InviteMemberRequest;
 import com.santhosh.projects.lovable_clone.dto.member.MemberResponse;
-import org.jspecify.annotations.Nullable;
+import com.santhosh.projects.lovable_clone.dto.member.UpdateMemberRoleRequest;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ public interface ProjectMemberService {
 
      MemberResponse inviteMember(Long projectId, InviteMemberRequest request, Long userId);
 
-     MemberResponse updateMemberRole(Long projectId, Long memberId, InviteMemberRequest request, Long userId);
+     MemberResponse updateMemberRole(Long projectId, Long memberId, UpdateMemberRoleRequest request, Long userId);
 
      MemberResponse deleteProjectMember(Long projectId, Long memberId, Long userId);
 }

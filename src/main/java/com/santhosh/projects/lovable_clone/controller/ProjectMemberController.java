@@ -3,6 +3,7 @@ package com.santhosh.projects.lovable_clone.controller;
 
 import com.santhosh.projects.lovable_clone.dto.member.InviteMemberRequest;
 import com.santhosh.projects.lovable_clone.dto.member.MemberResponse;
+import com.santhosh.projects.lovable_clone.dto.member.UpdateMemberRoleRequest;
 import com.santhosh.projects.lovable_clone.service.ProjectMemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,7 +38,7 @@ public class ProjectMemberController {
     public ResponseEntity<MemberResponse> updateMemberRole(
             @PathVariable Long projectId,
             @PathVariable Long memberId,
-            @RequestBody InviteMemberRequest request
+            @RequestBody UpdateMemberRoleRequest request
     )
     {
         Long userId = 1L;
@@ -48,13 +49,10 @@ public class ProjectMemberController {
     public ResponseEntity<MemberResponse> deleteMember(
             @PathVariable Long projectId,
             @PathVariable Long memberId
-
     )
     {
         Long userId = 1L;
         return ResponseEntity.ok(projectMemberService.deleteProjectMember(projectId,memberId,userId));
     }
-
-
 
 }
