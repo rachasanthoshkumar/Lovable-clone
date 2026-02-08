@@ -18,8 +18,12 @@ import java.time.Instant;
 @Table(name = "projects")
 public class Project {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+
+    @Column(nullable = false)
+    String name;
 
     @Column(nullable = false)
     String email;

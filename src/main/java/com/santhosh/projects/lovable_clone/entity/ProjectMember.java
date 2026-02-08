@@ -1,6 +1,7 @@
 package com.santhosh.projects.lovable_clone.entity;
 
 import com.santhosh.projects.lovable_clone.enums.ProjectRole;
+import jakarta.persistence.EmbeddedId;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,12 +13,15 @@ import java.time.Instant;
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProjectMember {
- ProjectMemberId id;
- Project project;
- User user;
-ProjectRole projectRole;
-Instant invitedAt;
-Instant acceptedAt;
+
+    @EmbeddedId
+    ProjectMemberId id;
+
+     Project project;
+     User user;
+     ProjectRole projectRole;
+     Instant invitedAt;
+     Instant acceptedAt;
 
 
 }
