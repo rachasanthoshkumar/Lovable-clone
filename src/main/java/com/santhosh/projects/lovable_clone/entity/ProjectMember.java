@@ -2,16 +2,18 @@ package com.santhosh.projects.lovable_clone.entity;
 
 import com.santhosh.projects.lovable_clone.enums.ProjectRole;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.antlr.v4.runtime.atn.PredictionContext;
 
 import java.time.Instant;
 
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ProjectMember {
 
@@ -32,6 +34,7 @@ public class ProjectMember {
 
      Instant invitedAt;
      Instant acceptedAt;
+
 
 
 }

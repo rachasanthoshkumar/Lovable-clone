@@ -6,6 +6,7 @@ import com.santhosh.projects.lovable_clone.dto.project.ProjectResponse;
 import com.santhosh.projects.lovable_clone.dto.project.ProjectSummaryResponse;
 import com.santhosh.projects.lovable_clone.entity.Project;
 import com.santhosh.projects.lovable_clone.entity.User;
+import com.santhosh.projects.lovable_clone.error.ResourceNotFoundException;
 import com.santhosh.projects.lovable_clone.repository.ProjectRepository;
 import com.santhosh.projects.lovable_clone.repository.UserRepository;
 import com.santhosh.projects.lovable_clone.service.ProjectService;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -73,7 +75,10 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ProjectResponse getUserProjectById(Long id, Long userId) {
         User owner = userRepository.findById(userId).orElseThrow();
-        Project project = projectRepository.findProjectById(id,userId);
+        Project project = projectRepository.findProjectById(id, userId).orElseThrow(
+                ()-> new ResourceNotFoundException("Project", id.toString())
+        );
+
                 return new ProjectResponse(
                         project.getId(),
                         project.getName(),
@@ -131,6 +136,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     public Project getAccessibleProjectById(Long projectId, Long userId)
     {
-        return projectRepository.findProjectById(projectId,userId);
+        return projectRepository.findProjectById(projectId,userId).orElseThrow(
+                ()->new ResourceNotFoundException("Project", projectId.toString())
+        );
     }
 }

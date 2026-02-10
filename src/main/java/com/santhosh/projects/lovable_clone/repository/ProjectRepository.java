@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
@@ -29,5 +30,5 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
                 and p.deletedAt is NULL
                 and p.owner.id = :userId
             """)
-    public Project findProjectById(@Param("projectId") Long projectId, @Param("userId") Long userId);
+    public Optional<Project> findProjectById(@Param("projectId") Long projectId, @Param("userId") Long userId);
 }

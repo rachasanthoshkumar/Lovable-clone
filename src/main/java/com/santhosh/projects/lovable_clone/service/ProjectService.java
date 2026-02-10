@@ -6,6 +6,7 @@ import com.santhosh.projects.lovable_clone.dto.project.ProjectSummaryResponse;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProjectService {
      List<ProjectSummaryResponse> getUserProjects(Long userId);
