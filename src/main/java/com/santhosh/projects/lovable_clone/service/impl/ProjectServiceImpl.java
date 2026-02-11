@@ -44,6 +44,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         Project project = Project.builder()
                 .name(request.name())
+                .email(owner.getEmail())
                 .build();
         project = projectRepository.save(project);
         ProjectMemberId projectMemberId = new ProjectMemberId(project.getId(), owner.getId());

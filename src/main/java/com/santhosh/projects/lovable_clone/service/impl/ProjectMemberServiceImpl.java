@@ -49,7 +49,7 @@ public class ProjectMemberServiceImpl implements ProjectMemberService {
     public MemberResponse inviteMember(Long projectId, InviteMemberRequest request, Long userId) {
         Project project = getAccessibleProjectById(projectId,userId);
 
-        User invitee = userRepository.findByUsername(request.username());
+        User invitee = userRepository.findByEmail(request.email());
         if(invitee.getId().equals(userId))
         {
             throw new RuntimeException("Cannot invite yourself");
