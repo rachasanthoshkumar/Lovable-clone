@@ -5,8 +5,13 @@ import com.santhosh.projects.lovable_clone.dto.project.ProjectRequest;
 import com.santhosh.projects.lovable_clone.dto.project.ProjectResponse;
 import com.santhosh.projects.lovable_clone.dto.project.ProjectSummaryResponse;
 import com.santhosh.projects.lovable_clone.entity.Project;
+import com.santhosh.projects.lovable_clone.entity.ProjectMember;
+import com.santhosh.projects.lovable_clone.entity.ProjectMemberId;
 import com.santhosh.projects.lovable_clone.entity.User;
+import com.santhosh.projects.lovable_clone.enums.ProjectRole;
 import com.santhosh.projects.lovable_clone.error.ResourceNotFoundException;
+import com.santhosh.projects.lovable_clone.mapper.ProjectMapper;
+import com.santhosh.projects.lovable_clone.repository.ProjectMemberRepository;
 import com.santhosh.projects.lovable_clone.repository.ProjectRepository;
 import com.santhosh.projects.lovable_clone.repository.UserRepository;
 import com.santhosh.projects.lovable_clone.service.ProjectService;
@@ -30,7 +35,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     ProjectRepository projectRepository;
     UserRepository userRepository;
-    //ProjectMapper projectMapper;
+    ProjectMapper projectMapper;
+    ProjectMemberRepository projectMemberRepository;
 
     @Override
     public ProjectResponse createProject(ProjectRequest request, Long userId) {
@@ -38,38 +44,30 @@ public class ProjectServiceImpl implements ProjectService {
 
         Project project = Project.builder()
                 .name(request.name())
-                .owner(owner)
-                .email(owner.getEmail())
                 .build();
         project = projectRepository.save(project);
+        ProjectMemberId projectMemberId = new ProjectMemberId(project.getId(), owner.getId());
+        ProjectMember projectMember= ProjectMember.builder()
+                .projectRole(ProjectRole.OWNER)
+                .project(project)
+                .id(projectMemberId)
+                .user(owner)
+                .invitedAt(Instant.now())
+                .acceptedAt(Instant.now())
+                .build();
 
+projectMemberRepository.save(projectMember);
 
-        return new ProjectResponse(
-                project.getId(),
-                project.getName(),
-                project.getCreatedAt(),
-                project.getUpdatedAt(),
-                new UserProfileResponse(
-                        owner.getId(),
-                        owner.getEmail(),
-                        owner.getName(),
-                        owner.getAvatarUrl()
-                )
-        );
-    //    return projectMapper.toProjectResponse(project);
+      return projectMapper.toProjectResponse(project);
 
     }
 
     @Override
     public List<ProjectSummaryResponse> getUserProjects(Long userId) {
-        return projectRepository.findAllAccessibleProjectsByUser(userId)
-                .stream()
-                .map(project -> new ProjectSummaryResponse(
-                        project.getId(),
-                        project.getName(),
-                        project.getCreatedAt(),
-                        project.getUpdatedAt()
-                )).collect(Collectors.toList());
+       var projects = projectRepository.findAllAccessibleProjectsByUser(userId);
+
+      return projectMapper.toListofProjectSummaryResponse(projects);
+
     }
 
     @Override
@@ -79,18 +77,7 @@ public class ProjectServiceImpl implements ProjectService {
                 ()-> new ResourceNotFoundException("Project", id.toString())
         );
 
-                return new ProjectResponse(
-                        project.getId(),
-                        project.getName(),
-                        project.getCreatedAt(),
-                        project.getUpdatedAt(),
-                        new UserProfileResponse(
-                                owner.getId(),
-                                owner.getEmail(),
-                                owner.getName(),
-                                owner.getAvatarUrl()
-                        )
-                );
+                return projectMapper.toProjectResponse(project);
     }
 
 
@@ -100,25 +87,10 @@ public class ProjectServiceImpl implements ProjectService {
         User owner = userRepository.findById(userId).orElseThrow();
 
         Project getProject = getAccessibleProjectById(id,userId);
-        if(!getProject.getOwner().getId().equals(userId))
-        {
-            throw new RuntimeException("You are not allowed to update!");
-        }
         getProject.setName(request.name());
         Project savedProject = projectRepository.save(getProject);
 
-        return new ProjectResponse(
-                savedProject.getId(),
-                savedProject.getName(),
-                savedProject.getCreatedAt(),
-                savedProject.getUpdatedAt(),
-                new UserProfileResponse(
-                        owner.getId(),
-                        owner.getEmail(),
-                        owner.getName(),
-                        owner.getAvatarUrl()
-                )
-        );
+        return projectMapper.toProjectResponse(savedProject);
     }
 
 
@@ -126,10 +98,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public void softDelete(Long id, Long userId) {
     Project project = getAccessibleProjectById(id,userId);
-    if(!project.getOwner().getId().equals(userId))
-    {
-        throw new RuntimeException("You are not allowed to delete!");
-    }
+
     project.setDeletedAt(Instant.now());
     projectRepository.save(project);
     }
