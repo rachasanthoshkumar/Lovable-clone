@@ -35,4 +35,5 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(apiError.httpStatus()).body(apiError);
     }
 
+
 }
