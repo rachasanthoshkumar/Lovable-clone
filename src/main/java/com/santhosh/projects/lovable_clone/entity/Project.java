@@ -31,9 +31,6 @@ public class Project {
     @Column(nullable = false)
     String name;
 
-    @Column(nullable = false)
-    String email;
-
 
     Boolean isPublic=false;
 

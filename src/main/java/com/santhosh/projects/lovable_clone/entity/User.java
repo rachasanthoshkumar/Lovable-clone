@@ -1,6 +1,7 @@
 package com.santhosh.projects.lovable_clone.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
@@ -20,8 +21,10 @@ public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-     String email;
-     String passwordHash;
+    @Email
+    String username;
+
+     String password;
      String name;
      String avatarUrl;
 
